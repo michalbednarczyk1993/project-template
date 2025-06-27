@@ -7,3 +7,5 @@
     - Dodanie pliku `Dockerfile` do każdego serwisu
     - Konfiguracja `docker-compose.yml` dla uruchamiania całego środowiska
 
+3. Dodanie prostego github workflow
+   - Konfiguracja podstawowych kroków CI (budowanie, testowanie)
