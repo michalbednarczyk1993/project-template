@@ -58,3 +58,31 @@ Aby zatrzymać środowisko:
 ```sh
 docker-compose down
 ```
+
+## Baza danych i migracje
+
+Projekt korzysta z bazy danych PostgreSQL uruchamianej w kontenerze Docker. Każdy serwis posiada własną bazę danych (`orders_db`, `products_db`, `users_db`), które są tworzone automatycznie przy starcie kontenera Postgresa dzięki skryptowi `init-db.sh`.
+
+Migracje Flyway są uruchamiane automatycznie przy starcie każdego serwisu Spring Boot. Oznacza to, że po uruchomieniu środowiska przez `docker-compose up --build`, każda aplikacja wykona swoje migracje (z folderu `src/main/resources/db/migration`) na odpowiedniej bazie danych.
+
+### Jak to działa?
+- Przy starcie kontenera Postgresa wykonywany jest skrypt `init-db.sh`, który tworzy bazy danych.
+- Po uruchomieniu serwisów Flyway automatycznie wykonuje migracje SQL na odpowiedniej bazie.
+
+Nie musisz wykonywać żadnych dodatkowych kroków, aby utworzyć bazy lub tabele testowe – wszystko dzieje się automatycznie.
+
+## Budowanie wszystkich serwisów jednym poleceniem
+
+W katalogu głównym projektu znajduje się skrypt `build-all.sh`, który automatycznie buduje wszystkie serwisy (`orders-service`, `products-service`, `users-service`).
+
+### Jak użyć?
+
+W systemach Linux, MacOS, WSL lub Git Bash na Windows:
+
+```sh
+./build-all.sh
+```
+
+Skrypt wykrywa środowisko i uruchamia odpowiednie polecenia. Po zakończeniu budowania każdego serwisu wyświetla czytelny podział w logach, a na końcu czeka na naciśnięcie klawisza przez użytkownika.
+
+W czystym Windows (cmd/PowerShell) zalecane jest użycie PowerShell lub uruchomienie skryptu przez Git Bash.
