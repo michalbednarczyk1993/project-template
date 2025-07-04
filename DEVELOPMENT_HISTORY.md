@@ -17,3 +17,4 @@
 
 5. Dodanie skryptu budującego wszystkie serwisy za jednym razem - build-all.sh
 
+[//]: # ( Bazy danych – w klastrze uruchomimy jedną instancję PostgreSQL (np. dla danych relacyjnych), jedną MongoDB (dla danych dokumentowych) oraz jedną Elasticsearch (dla potrzeb wyszukiwania i analizy logów). Każdy mikroserwis będzie miał wydzieloną bazę/schema lub indeks w tych współdzielonych instancjach.)
