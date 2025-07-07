@@ -58,3 +58,21 @@ Aby zatrzymać środowisko:
 ```sh
 docker-compose down
 ```
+
+## Kafka & AKHQ
+
+Aby uruchomić środowisko z Kafką oraz narzędziem AKHQ do zarządzania klastrem:
+
+```bash
+docker-compose up zookeeper kafka akhq
+```
+
+Po uruchomieniu, panel AKHQ będzie dostępny pod adresem:
+
+- http://localhost:8090
+
+Domyślna konfiguracja nie wymaga logowania.
+
+### Dostęp do brokera Kafka
+- Broker Kafka nasłuchuje na porcie `9092` (localhost)
+- AKHQ jest skonfigurowany do łączenia się z brokerem pod adresem `kafka:29092` (wewnątrz sieci docker-compose)
