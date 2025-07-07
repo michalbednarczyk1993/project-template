@@ -9,3 +9,10 @@
 
 3. Dodanie prostego github workflow
    - Konfiguracja podstawowych kroków CI (budowanie, testowanie)
+
+5. Dodanie Kafki
+   - Konfiguracja Kafki jako systemu kolejkowania wiadomości
+[//]: # (   - Implementacja producenta i konsumenta wiadomości)
+[//]: # (   - Dodanie topiców do Kafki)
+[//]: # (   - Konfiguracja kompresji wiadomości)
+   
