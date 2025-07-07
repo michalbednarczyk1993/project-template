@@ -21,3 +21,9 @@
    - Lokalne testy z narzędziem ACT
    - Naprawa skryptów i testy na środowisku githuba
 
+7. Dodanie Kafki
+   - Konfiguracja Kafki jako systemu kolejkowania wiadomości
+[//]: # (   - Implementacja producenta i konsumenta wiadomości)
+[//]: # (   - Dodanie topiców do Kafki)
+[//]: # (   - Konfiguracja kompresji wiadomości)
+   
