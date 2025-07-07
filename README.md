@@ -14,30 +14,30 @@ Szablon projektu mikroserwisowego opartego o Spring Boot 3, Java 21 oraz Maven. 
 ## Instalacja
 
 1. Zainstaluj parent-pom (w katalogu głównym):
-```sh
+   ```sh
    mvn install -N
-```
+   ```
 2. Zbuduj wszystkie moduły:
-```sh
+   ```sh
    mvn install
-```
+   ```
 3. Uruchom wybrany serwis, np. users-service:
-```sh
+   ```sh
    cd users-service
    ./mvnw spring-boot:run
-```
+   ```
 
 ## Uruchamianie przez Docker
 
 Każdy serwis można zbudować i uruchomić osobno:
 
 ```sh
-  cd users-service
-  ./mvnw clean package
-  # Budowa obrazu
-  docker build -t users-service .
-  # Uruchomienie
-  docker run -p 8083:8083 users-service
+cd users-service
+./mvnw clean package
+# Budowa obrazu
+docker build -t users-service .
+# Uruchomienie
+docker run -p 8083:8083 users-service
 ```
 Analogicznie dla pozostałych serwisów (products-service, orders-service).
 
@@ -46,7 +46,7 @@ Analogicznie dla pozostałych serwisów (products-service, orders-service).
 W katalogu głównym:
 
 ```sh
-  docker-compose up --build
+docker-compose up --build
 ```
 
 Serwisy będą dostępne na portach:
@@ -56,7 +56,7 @@ Serwisy będą dostępne na portach:
 
 Aby zatrzymać środowisko:
 ```sh
-  docker-compose down
+docker-compose down
 ```
 
 ## Baza danych i migracje
@@ -103,3 +103,21 @@ Aby uruchomić konkretny workflow, będąc w folderze głównym projektu użyj k
   act -W .github/workflows/<nazwa-workflowu>.yml
 ```
 To uruchomi workflow w lokalnym środowisku, symulując działanie GitHub Actions.
+
+## Kafka & AKHQ
+
+Aby uruchomić środowisko z Kafką oraz narzędziem AKHQ do zarządzania klastrem:
+
+```bash
+docker-compose up zookeeper kafka akhq
+```
+
+Po uruchomieniu, panel AKHQ będzie dostępny pod adresem:
+
+- http://localhost:8090
+
+Domyślna konfiguracja nie wymaga logowania.
+
+### Dostęp do brokera Kafka
+- Broker Kafka nasłuchuje na porcie `9092` (localhost)
+- AKHQ jest skonfigurowany do łączenia się z brokerem pod adresem `kafka:29092` (wewnątrz sieci docker-compose)

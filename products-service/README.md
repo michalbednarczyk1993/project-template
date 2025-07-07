@@ -18,3 +18,7 @@
 ## Healthcheck
 
 Endpoint zdrowia: http://localhost:8082/actuator/health 
+
+## Kafka & AKHQ
+
+W środowisku developerskim dostępny jest broker Kafka oraz panel AKHQ (http://localhost:8090) do podglądu i zarządzania tematami. 
