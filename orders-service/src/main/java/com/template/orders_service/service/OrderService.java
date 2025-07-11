@@ -2,6 +2,7 @@ package com.template.orders_service.service;
 
 import com.template.orders_service.dto.OrderDto;
 import com.template.orders_service.dto.OrderItemDto;
+import com.template.orders_service.dto.OrderUpdateDto;
 import com.template.orders_service.entity.Order;
 import com.template.orders_service.entity.OrderItem;
 import com.template.orders_service.mapper.OrderMapper;
@@ -9,12 +10,14 @@ import com.template.orders_service.repository.OrderRepository;
 import com.template.orders_service.repository.OrderItemRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -30,7 +33,7 @@ public class OrderService {
         return orderRepository.findAll().stream()
                 .map(order -> {
                     // Eager fetch orderItems to avoid LazyLoadingException
-                    order.getOrderItems().size();
+                    Hibernate.initialize(order.getOrderItems());
                     return orderMapper.toDto(order);
                 })
                 .collect(Collectors.toList());
@@ -40,7 +43,7 @@ public class OrderService {
     public Page<OrderDto> getAllOrdersPaged(Pageable pageable) {
         return orderRepository.findAll(pageable)
                 .map(o -> {
-                    o.getOrderItems().size();
+                    Hibernate.initialize(o.getOrderItems());
                     return orderMapper.toDto(o);
                 });
     }
@@ -49,14 +52,13 @@ public class OrderService {
     public OrderDto getOrderById(UUID id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found"));
-        order.getOrderItems().size(); // Eager fetch
+        Hibernate.initialize(order.getOrderItems()); // Eager fetch
         return orderMapper.toDto(order);
     }
 
     @Transactional
     public OrderDto createOrder(OrderDto dto) {
-        Order order = orderMapper.toEntity(dto);
-        order = orderRepository.save(order);
+        final Order order = orderRepository.save(orderMapper.toEntity(dto));
         if (dto.getOrderItems() != null) {
             List<OrderItem> items = dto.getOrderItems().stream()
                     .map(itemDto -> orderMapper.toItemEntity(itemDto, order))
@@ -68,23 +70,26 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderDto updateOrder(UUID id, OrderDto dto) {
-        Order order = orderRepository.findById(id)
+    public OrderDto updateOrder(UUID id, OrderUpdateDto dto) {
+        final Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found"));
-        order.setUserId(dto.getUserId());
-        order.setCreatedAt(dto.getCreatedAt());
-        order.setStatus(dto.getStatus());
-        // Usuwamy stare pozycje i dodajemy nowe
-        orderItemRepository.deleteAll(order.getOrderItems());
+        // Aktualizujemy tylko status, jeśli został przekazany
+        if (dto.getStatus() != null) {
+            order.setStatus(dto.getStatus());
+        }
+        // Aktualizujemy pozycje zamówienia, jeśli zostały przekazane
         if (dto.getOrderItems() != null) {
+            // Usuwamy stare pozycje
+            orderItemRepository.deleteAll(order.getOrderItems());
+            // Dodajemy nowe pozycje
             List<OrderItem> items = dto.getOrderItems().stream()
                     .map(itemDto -> orderMapper.toItemEntity(itemDto, order))
                     .collect(Collectors.toList());
             items.forEach(orderItemRepository::save);
             order.setOrderItems(items);
         }
-        order = orderRepository.save(order);
-        return orderMapper.toDto(order);
+        Order savedOrder = orderRepository.save(order);
+        return orderMapper.toDto(savedOrder);
     }
 
     @Transactional

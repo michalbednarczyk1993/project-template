@@ -1,6 +1,7 @@
 package com.template.orders_service.controller;
 
 import com.template.orders_service.dto.OrderDto;
+import com.template.orders_service.dto.OrderUpdateDto;
 import com.template.orders_service.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrderDto> update(@PathVariable UUID id, @Valid @RequestBody OrderDto dto) {
+    public ResponseEntity<OrderDto> update(@PathVariable UUID id, @Valid @RequestBody OrderUpdateDto dto) {
         return ResponseEntity.ok(orderService.updateOrder(id, dto));
     }
 
