@@ -18,7 +18,9 @@ public class UserAddress {
     private User user;
 
     private String street;
+
     private String city;
+
     @Column(name = "zip_code")
     private String zipCode;
 }
