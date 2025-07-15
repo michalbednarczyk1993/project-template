@@ -39,7 +39,6 @@ public class RegistrationService {
         user.setLastName(request.getLastName());
         userRepository.save(user);
 
-
         return userMapper.toDto(user);
     }
 }
