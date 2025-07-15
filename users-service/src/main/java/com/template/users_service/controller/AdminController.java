@@ -28,7 +28,7 @@ public class AdminController {
     }
 
     @PostMapping("/removeAdminPrivileges")
-    public ResponseEntity<String> removeAdminPriviliges(@RequestParam String email, Authentication authentication) {
+    public ResponseEntity<String> removeAdminPrivileges(@RequestParam String email, Authentication authentication) {
         String currentEmail = authentication.getName();
         if (currentEmail.equals(email)) {
             return ResponseEntity.badRequest().body("Nie można odebrać sobie uprawnień admina");

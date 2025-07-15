@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body("❌ Resource not found: " + ex.getMessage());
+                .body("❌ inappropriate input argument: " + ex.getMessage());
     }
 
     @ExceptionHandler(IllegalStateException.class)

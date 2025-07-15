@@ -30,38 +30,19 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(@Valid @RequestBody RegisterRequest request) {
-        try {
-            UserDto user = registrationService.registerUser(request);
-            return ResponseEntity.ok(user);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
+        UserDto user = registrationService.registerUser(request);
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
-        try {
-            LoginResponse response = loginService.login(request);
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
+        LoginResponse response = loginService.login(request);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
-            // Wyciągamy datę wygaśnięcia tokena
-            try {
-                long exp = ((Number) jwtService.extractAllClaims(token).getExpiration().getTime())
-                        .longValue();
-                tokenBlacklistService.blacklistToken(token, exp);
-            } catch (Exception e) {
-                return ResponseEntity.badRequest().build();
-            }
-        }
+        loginService.logout(request.getHeader("Authorization"));
         return ResponseEntity.ok().build();
     }
 }
