@@ -17,3 +17,7 @@
 
 5. Dodanie skryptu budującego wszystkie serwisy za jednym razem - build-all.sh
 
+6. Naprawa github workflow
+   - Lokalne testy z narzędziem ACT
+   - Naprawa skryptów i testy na środowisku githuba
+

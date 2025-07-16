@@ -86,3 +86,21 @@ W systemach Linux, MacOS, WSL lub Git Bash na Windows:
 Skrypt wykrywa środowisko i uruchamia odpowiednie polecenia. Po zakończeniu budowania każdego serwisu wyświetla czytelny podział w logach, a na końcu czeka na naciśnięcie klawisza przez użytkownika.
 
 W czystym Windows (cmd/PowerShell) zalecane jest użycie PowerShell lub uruchomienie skryptu przez Git Bash.
+
+## CI/CD
+Projekt zawiera podstawową konfigurację GitHub Actions do automatyzacji procesu CI/CD. Workflow jest skonfigurowany do uruchamiania testów i budowania aplikacji przy każdym PR albo pushu do gałęzi `main` oraz `develop`.
+### Testowanie lokalne z [ACT](https://nektosact.com/introduction.html)
+Do lokalnego testowania workflowów GitHub Actions można użyć narzędzia act, które symuluje środowisko GitHub Actions na lokalnej maszynie przy użyciu Dockera.
+Żeby przetestować workflow lokalnie, wykonaj następujące kroki:
+
+
+🔧 Wymagania
+Zainstalowany act: [User Manual](https://nektosact.com/installation/index.html)
+Docker uruchomiony w tle
+
+1. Aby uruchomić konkretny workflow, będąc w folderze głównym projektu użyj komendy:
+   ```sh
+   act -W .github/workflows/<nazwa-workflowu>.yml
+   ```
+   To uruchomi workflow w lokalnym środowisku, symulując działanie GitHub Actions.
+3. 
