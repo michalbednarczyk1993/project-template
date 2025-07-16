@@ -31,7 +31,7 @@ jobs:
           cache: maven
 
       - name: Install parent POM
-        run: mvn -B install --file pom.xml,36
+        run: mvn -B install --file pom.xml
 
       - name: Run Maven Build for ${{ matrix.service }}
         run: mvn -B clean package --file ${{ matrix.service }}/pom.xml

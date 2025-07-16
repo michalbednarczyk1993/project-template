@@ -30,12 +30,12 @@ jobs:
               assignees: [author]
             });
 
-#            // only ask for review if michalbednarczyk1993 ≠ PR author
-#            if (reviewer !== author) {
-#              await github.rest.pulls.requestReviewers({
-#                pull_number: prNumber,
-#                owner,
-#                repo,
-#                reviewers: [reviewer]
-#              });
-#            }
+            // only ask for review if michalbednarczyk1993 ≠ PR author
+            if (reviewer !== author) {
+              await github.rest.pulls.requestReviewers({
+                pull_number: prNumber,
+                owner,
+                repo,
+                reviewers: [reviewer]
+              });
+            }
