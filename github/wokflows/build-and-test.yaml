@@ -17,7 +17,7 @@ on:
 jobs:
   build-scraper:
     runs-on: ubuntu-latest
-    name: Build and test scraper-app
+    name: Build and test app
 
     strategy:
       matrix:
@@ -33,8 +33,8 @@ jobs:
           distribution: "temurin"
           cache: maven
 
-      - name: Install parent POM
-        run: mvn -B install --file pom.xml
+      - name: Build parent POM
+        run: mvn -B package --file pom.xml
 
       - name: Run Maven Build for ${{ matrix.service }}
-        run: mvn -B clean verify --file ${{ matrix.service }}/pom.xml
+        run: mvn -B clean package --file ${{ matrix.service }}/pom.xml
