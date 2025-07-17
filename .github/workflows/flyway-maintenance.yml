@@ -1,0 +1,52 @@
+name: Flyway Maintenance
+
+on:
+  workflow_dispatch:
+
+jobs:
+  flyway-maintenance:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - service: orders-service
+            service_db: orders_db
+          - service: products-service
+            service_db: products_db
+          - service: users-service
+            service_db: users_db
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres  # tylko po to, żeby kontener wystartował
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          distribution: temurin
+
+      - name: Run Flyway repair + migrate for ${{ matrix.service }}
+        working-directory: services/${{ matrix.service }}
+        run: |
+          ./mvnw flyway:repair flyway:migrate
+        env:
+          FLYWAY_URL: jdbc:postgresql://localhost:5432/${{ matrix.service_db }}
+          FLYWAY_USER: postgres
+          FLYWAY_PASSWORD: postgres
