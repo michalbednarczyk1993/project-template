@@ -14,15 +14,18 @@ jobs:
     services:
       postgres:
         image: postgres:15
+        ports:
+          - 5432:5432
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         options: >-
-          --health-cmd "pg_isready -U postgres"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-          --network-alias postgres
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+          --name=pg
+          --network-alias=postgres
 
     strategy:
       matrix:
@@ -61,7 +64,7 @@ jobs:
           if [ "$ACT" = "true" ]; then
             echo "SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/${{ matrix.service_db }}" >> $GITHUB_ENV
           else
-            echo "SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${{ matrix.service_db }}" >> $GITHUB_ENV
+            echo "SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/${{ matrix.service_db }}" >> $GITHUB_ENV
           fi        
 
       - name: Wait for PostgreSQL (local ACT only)
@@ -83,9 +86,9 @@ jobs:
         if: ${{ env.ACT != 'true' }}
         run: |
           sudo apt-get install -y postgresql-client
-          psql -h postgres -U postgres -d postgres -c "CREATE DATABASE orders_db;"
-          psql -h postgres -U postgres -d postgres -c "CREATE DATABASE products_db;"
-          psql -h postgres -U postgres -d postgres -c "CREATE DATABASE users_db;"
+          psql -h localhost -U postgres -d postgres -c "CREATE DATABASE orders_db;"
+          psql -h localhost -U postgres -d postgres -c "CREATE DATABASE products_db;"
+          psql -h localhost -U postgres -d postgres -c "CREATE DATABASE users_db;"
         env:
           PGPASSWORD: postgres
 
