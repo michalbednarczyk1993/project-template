@@ -43,7 +43,7 @@ jobs:
           distribution: temurin
 
       - name: Run Flyway repair + migrate for ${{ matrix.service }}
-        working-directory: services/${{ matrix.service }}
+        working-directory: ${{ matrix.service }}
         run: |
           ./mvnw flyway:repair flyway:migrate
         env:
