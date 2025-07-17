@@ -14,30 +14,30 @@ Szablon projektu mikroserwisowego opartego o Spring Boot 3, Java 21 oraz Maven. 
 ## Instalacja
 
 1. Zainstaluj parent-pom (w katalogu głównym):
-   ```sh
+```sh
    mvn install -N
-   ```
+```
 2. Zbuduj wszystkie moduły:
-   ```sh
+```sh
    mvn install
-   ```
+```
 3. Uruchom wybrany serwis, np. users-service:
-   ```sh
+```sh
    cd users-service
    ./mvnw spring-boot:run
-   ```
+```
 
 ## Uruchamianie przez Docker
 
 Każdy serwis można zbudować i uruchomić osobno:
 
 ```sh
-cd users-service
-./mvnw clean package
-# Budowa obrazu
-docker build -t users-service .
-# Uruchomienie
-docker run -p 8083:8083 users-service
+  cd users-service
+  ./mvnw clean package
+  # Budowa obrazu
+  docker build -t users-service .
+  # Uruchomienie
+  docker run -p 8083:8083 users-service
 ```
 Analogicznie dla pozostałych serwisów (products-service, orders-service).
 
@@ -46,7 +46,7 @@ Analogicznie dla pozostałych serwisów (products-service, orders-service).
 W katalogu głównym:
 
 ```sh
-docker-compose up --build
+  docker-compose up --build
 ```
 
 Serwisy będą dostępne na portach:
@@ -56,7 +56,7 @@ Serwisy będą dostępne na portach:
 
 Aby zatrzymać środowisko:
 ```sh
-docker-compose down
+  docker-compose down
 ```
 
 ## Baza danych i migracje
@@ -80,7 +80,7 @@ W katalogu głównym projektu znajduje się skrypt `build-all.sh`, który automa
 W systemach Linux, MacOS, WSL lub Git Bash na Windows:
 
 ```sh
-./build-all.sh
+  ./build-all.sh
 ```
 
 Skrypt wykrywa środowisko i uruchamia odpowiednie polecenia. Po zakończeniu budowania każdego serwisu wyświetla czytelny podział w logach, a na końcu czeka na naciśnięcie klawisza przez użytkownika.
@@ -96,11 +96,10 @@ Do lokalnego testowania workflowów GitHub Actions można użyć narzędzia act,
 
 🔧 Wymagania
 Zainstalowany act: [User Manual](https://nektosact.com/installation/index.html)
-Docker uruchomiony w tle
+Docker uruchomiony w tle + uruchomiony w nim kontener Postgresa z bazami danych bazujący na docker-compose
 
-1. Aby uruchomić konkretny workflow, będąc w folderze głównym projektu użyj komendy:
-   ```sh
-   act -W .github/workflows/<nazwa-workflowu>.yml
-   ```
-   To uruchomi workflow w lokalnym środowisku, symulując działanie GitHub Actions.
-3. 
+Aby uruchomić konkretny workflow, będąc w folderze głównym projektu użyj komendy:
+```sh
+  act -W .github/workflows/<nazwa-workflowu>.yml
+```
+To uruchomi workflow w lokalnym środowisku, symulując działanie GitHub Actions.
