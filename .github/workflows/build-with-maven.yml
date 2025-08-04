@@ -92,6 +92,11 @@ jobs:
         env:
           PGPASSWORD: postgres
 
+      - name: Clean and migrate database
+        run: |
+          ./mvnw flyway:clean
+          ./mvnw flyway:migrate
+
       - name: Install parent POM
         run: mvn -B install --file pom.xml
 
