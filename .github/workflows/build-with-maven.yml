@@ -92,10 +92,19 @@ jobs:
         env:
           PGPASSWORD: postgres
 
-      - name: Clean and migrate database
+      - name: Repair Flyway checksums
         run: |
-          mvn flyway:clean
-          mvn flyway:migrate
+          mvn flyway:repair \
+            -Dflyway.url=${{ env.SPRING_DATASOURCE_URL }} \
+            -Dflyway.user=${{ env.SPRING_DATASOURCE_USERNAME }} \
+            -Dflyway.password=${{ env.SPRING_DATASOURCE_PASSWORD }}
+
+      - name: Migrate DB
+        run: |
+          mvn flyway:migrate \
+            -Dflyway.url=${{ env.SPRING_DATASOURCE_URL }} \
+            -Dflyway.user=${{ env.SPRING_DATASOURCE_USERNAME }} \
+            -Dflyway.password=${{ env.SPRING_DATASOURCE_PASSWORD }}
 
       - name: Install parent POM
         run: mvn -B install --file pom.xml
