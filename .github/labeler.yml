@@ -1,0 +1,10 @@
+documentation:
+  - '**/*.md'
+ci:
+  - '.github/**'
+orders-service:
+  - 'orders-service/**'
+products-service:
+  - 'products-service/**'
+users-service:
+  - 'users-service/**'
