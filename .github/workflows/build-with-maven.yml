@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     services:
@@ -40,6 +39,8 @@ jobs:
     env:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_FLYWAY_BASELINE_ON_MIGRATE: true
+      SPRING_FLYWAY_BASELINE_VERSION: 1
 
     steps:
       - uses: actions/checkout@v4
@@ -97,6 +98,3 @@ jobs:
 
       - name: Run Maven Build for ${{ matrix.service }}
         run: mvn -B clean package --file ${{ matrix.service }}/pom.xml
-
-      - name: Update dependency graph
-        uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
