@@ -1,12 +1,13 @@
 package com.template.users_service.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
 import java.util.UUID;
 
-@Setter
-@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "user_addresses")
 public class UserAddress {
@@ -18,7 +19,9 @@ public class UserAddress {
     private User user;
 
     private String street;
+
     private String city;
+
     @Column(name = "zip_code")
     private String zipCode;
 }

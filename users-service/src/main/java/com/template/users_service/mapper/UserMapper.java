@@ -10,7 +10,8 @@ public class UserMapper {
         UserDto dto = new UserDto();
         dto.setId(user.getId());
         dto.setEmail(user.getEmail());
-        dto.setPasswordHash(user.getPasswordHash());
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
         return dto;
     }
 
@@ -18,7 +19,8 @@ public class UserMapper {
         User user = new User();
         user.setId(dto.getId());
         user.setEmail(dto.getEmail());
-        user.setPasswordHash(dto.getPasswordHash());
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
         return user;
     }
 }

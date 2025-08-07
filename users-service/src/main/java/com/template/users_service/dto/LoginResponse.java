@@ -1,20 +1,28 @@
 package com.template.users_service.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import jakarta.validation.constraints.NotBlank;
 import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserAddressDto {
+public class LoginResponse {
     @NotBlank
-    private String street;
+    private String token;
+
     @NotBlank
-    private String city;
+    private String email;
+
     @NotBlank
-    private String zipCode;
+    private String firstName;
+
+    @NotBlank
+    private String lastName;
+
+    @NotBlank
+    private Boolean isAdmin;
 }

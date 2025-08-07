@@ -2,53 +2,30 @@ package com.template.users_service.controller;
 
 import com.template.users_service.dto.UserDto;
 import com.template.users_service.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
-import java.util.List;
-import java.util.UUID;
+import org.springframework.security.core.Authentication;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/user")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
-    @GetMapping
-    public List<UserDto> getAllUsers() {
-        return userService.getAllUsers();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable UUID id) {
-        return userService.getUserById(id)
+    @GetMapping("/aboutMe")
+    public ResponseEntity<UserDto> getAboutMe(Authentication authentication) {
+        String email = authentication.getName();
+        return userService.getUserByEmail(email)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public UserDto createUser(@Valid @RequestBody UserDto userDto) {
-        return userService.saveUser(userDto);
+    @PutMapping("/aboutMe")
+    public ResponseEntity<UserDto> updateAboutMe(Authentication authentication, @RequestBody UserDto userDto) {
+        String email = authentication.getName();
+        return userService.updateUserByEmail(email, userDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable UUID id, @Valid @RequestBody UserDto userDto) {
-        if (userService.getUserById(id).isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        userDto.setId(id);
-        return ResponseEntity.ok(userService.saveUser(userDto));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
-        if (userService.getUserById(id).isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
-    }
-} 
+}
