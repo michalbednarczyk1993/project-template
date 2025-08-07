@@ -1,0 +1,100 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: ["master", "develop"]
+  pull_request:
+    branches: ["master", "develop"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+          --name=pg
+          --network-alias=postgres
+
+    strategy:
+      matrix:
+        include:
+          - service: orders-service
+            service_db: orders_db
+          - service: products-service
+            service_db: products_db
+          - service: users-service
+            service_db: users_db
+
+    env:
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_FLYWAY_BASELINE_ON_MIGRATE: true
+      SPRING_FLYWAY_BASELINE_VERSION: 1
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Act dependencies
+        if: ${{ env.ACT }}
+        run: |
+          apt-get update && apt-get install -y sudo curl maven
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Set SPRING_DATASOURCE_URL
+        run: |
+          if [ "$ACT" = "true" ]; then
+            echo "SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/${{ matrix.service_db }}" >> $GITHUB_ENV
+          else
+            echo "SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/${{ matrix.service_db }}" >> $GITHUB_ENV
+          fi        
+
+      - name: Wait for PostgreSQL (local ACT only)
+        if: ${{ env.ACT }}
+        run: |
+          for i in {1..30}; do
+            if pg_isready -h localhost -U postgres; then
+              echo "PostgreSQL is ready!"
+              break
+            fi
+            echo "Waiting for PostgreSQL..."
+            sleep 2
+          done
+          pg_isready -h localhost -U postgres
+        env:
+          PGPASSWORD: postgres
+
+      - name: Init databases (GitHub only)
+        if: ${{ env.ACT != 'true' }}
+        run: |
+          sudo apt-get install -y postgresql-client
+          psql -h localhost -U postgres -d postgres -c "CREATE DATABASE orders_db;"
+          psql -h localhost -U postgres -d postgres -c "CREATE DATABASE products_db;"
+          psql -h localhost -U postgres -d postgres -c "CREATE DATABASE users_db;"
+        env:
+          PGPASSWORD: postgres
+
+      - name: Install parent POM
+        run: mvn -B install --file pom.xml
+
+      - name: Run Maven Build for ${{ matrix.service }}
+        run: mvn -B clean package --file ${{ matrix.service }}/pom.xml
