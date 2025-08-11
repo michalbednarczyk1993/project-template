@@ -121,3 +121,7 @@ Domyślna konfiguracja nie wymaga logowania.
 ### Dostęp do brokera Kafka
 - Broker Kafka nasłuchuje na porcie `9092` (localhost)
 - AKHQ jest skonfigurowany do łączenia się z brokerem pod adresem `kafka:29092` (wewnątrz sieci docker-compose)
+
+### Lokalne środowisko Kafki
+W przypadku inicjalizowania lokalnego środowiska kafki problematyczne byłoby zarządzanie topicami i danymi.
+W związku z tym lokalne ustawienia dla topików są przechowywane w pliku `init-kafka-local-env.sh`, który możesz uruchmić po starcie kontenera Kafki.
